@@ -50,38 +50,88 @@ const tempWatchedData = [
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
-export default function App() {
-  const [query, setQuery] = useState("");
-  const [movies, setMovies] = useState(tempMovieData);
-  const [watched, setWatched] = useState(tempWatchedData);
-  const [isOpen1, setIsOpen1] = useState(true);
-  const [isOpen2, setIsOpen2] = useState(true);
 
-  const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
-  const avgUserRating = average(watched.map((movie) => movie.userRating));
-  const avgRuntime = average(watched.map((movie) => movie.runtime));
+function NavBar(){
+  
+  return (
+  <nav className="nav-bar">
+      <Search/>
+       <Logo/>
+       <NumResults/> 
+        
+      </nav>);
+}
+
+function Logo(){
+ return (
+  <div className="logo">
+    <span role="img"></span>
+    <h1>usePopcorn</h1>
+  </div>
+ ); 
+}
+
+
+function Search(){
+  const [query, setQuery] = useState("");
+ 
+  return (
+    <input
+    className="search"
+    type="text"
+    placeholder="Search movies..."
+    value={query}
+    onChange={(e) => setQuery(e.target.value)}
+  />
+  );
+}
+
+
+function NumResults(){
+  return(
+    <p className="num-results">
+   Found <strong>X</strong> results
+    </p>
+    );
+}
+
+function Main(){
+
+  
+ 
 
   return (
-    <>
-      <nav className="nav-bar">
-        <div className="logo">
-          <span role="img">🍿</span>
-          <h1>usePopcorn</h1>
-        </div>
-        <input
-          className="search"
-          type="text"
-          placeholder="Search movies..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <p className="num-results">
-          Found <strong>{movies.length}</strong> results
-        </p>
-      </nav>
+    <main className="main">
+        <ListBox/>
+        <WatchedBox/>
 
-      <main className="main">
-        <div className="box">
+        
+      </main>
+  );
+}
+
+
+export default function App() {
+  
+  
+  return (
+    <>
+     <NavBar/>
+     <Main/>
+      
+    </>
+  );
+}
+
+
+
+
+function ListBox(){
+ 
+  const [watched, setWatched] = useState(tempWatchedData);
+
+  return (
+    <div className="box">
           <button
             className="btn-toggle"
             onClick={() => setIsOpen1((open) => !open)}
@@ -89,7 +139,17 @@ export default function App() {
             {isOpen1 ? "–" : "+"}
           </button>
           {isOpen1 && (
-            <ul className="list">
+            <MovieList/>
+          )}
+        </div>
+  );
+}
+
+function MovieList(){
+  const [movies, setMovies] = useState(tempMovieData);
+
+ return ( 
+<ul className="list">
               {movies?.map((movie) => (
                 <li key={movie.imdbID}>
                   <img src={movie.Poster} alt={`${movie.Title} poster`} />
@@ -103,10 +163,22 @@ export default function App() {
                 </li>
               ))}
             </ul>
-          )}
-        </div>
+ );
 
-        <div className="box">
+}
+
+
+function WatchedBox(){
+  const [isOpen1, setIsOpen1] = useState(true);
+  const [isOpen2, setIsOpen2] = useState(true);
+
+  const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
+  const avgUserRating = average(watched.map((movie) => movie.userRating));
+  const avgRuntime = average(watched.map((movie) => movie.runtime));
+   
+  return (
+
+  <div className="box">
           <button
             className="btn-toggle"
             onClick={() => setIsOpen2((open) => !open)}
@@ -162,7 +234,7 @@ export default function App() {
             </>
           )}
         </div>
-      </main>
-    </>
+
   );
 }
+
